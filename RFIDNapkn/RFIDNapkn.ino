@@ -5,22 +5,24 @@
 
 bool currently_reserved;
 unsigned long start_time;
+int current_id;
 
 RFID1 rfid;
 
-uchar serNum[5];  // array to store your ID
+unsigned char serNum[5];  // array to store your ID
 
 void setup() {
   Serial.begin(9600);
   currently_reserved = false;
+  current_id = -1;
   rfid.begin(7, 5, 4, 3, 6, 2);  // params are pin numbers
   delay(100);
   rfid.init();
 }
 
 void loop() {
-  uchar status;
-  uchar str[MAX_LEN];
+  unsigned char status;
+  unsigned char str[MAX_LEN];
   status = rfid.request(PICC_REQIDL, str);
 
   //check if currently reserved and if time is up
@@ -41,14 +43,22 @@ void loop() {
 
          memcpy(serNum, str, 5);
        
-        // convert serNum to a datatype we can use
-
-        // if table is currently reserved:
-          // if id is the same as id used to reserve, unreserve table
-        // else:
-          // if id is not already in database:
-
-            // reserve table, save id in global variable, save id, status to database, set start time
+         // convert serNum to a datatype we can use
+        unsigned int intId;
+        memcpy(&intId, str, 5);
+       
+        if (currently_reserved == true){
+          if (current_id == intId){
+            currently_reserved = false; //unreserve table 
+          }
+        } else {
+          // if name is not in UserStatus
+            currently_reserved = true;
+            current_id = intId;
+            // create new Napkn node w/ DeviceStatus, RecentUserID, TimeLimit
+            // push to firebase
+            start_time = millis(); //push time?
+        }
     }
   }
 
