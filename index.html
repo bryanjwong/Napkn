@@ -1,9 +1,53 @@
+<!doctype html>
 <html>
-<head>
-  <title>Napkn</title>
-  </head>
+	
+	<head>
+		<link rel='stylesheet', href='styles.css'>
+	</head>
+	<head>
+		<title>Napkn</title>
+		<style>
+			
+		</style>
 
-  <body>
-    <hl>Welcome to Napkn!</hl>
-    </body>
+		<script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js"></script>
+	</head>
+
+	
+
+	<body>
+		<header>
+			Napkn
+    	</header>
+
+    	<p>
+    		Tables Total: 3
+    	</p>
+
+    	<p id="TablesOpen">
+    	</p>
+
+    	<ul id = "TableList">
+    		
+    	</ul>
+
+		<script>
+		  // Your web app's Firebase configuration
+		  var firebaseConfig = {
+		    apiKey: "AIzaSyA3trYKySg1A-d0wv2Z3_sHPy3y6oMn3FE",
+		    authDomain: "napkn-test-d7a85.firebaseapp.com",
+		    databaseURL: "https://napkn-test-d7a85.firebaseio.com",
+		    projectId: "napkn-test-d7a85",
+		    storageBucket: "napkn-test-d7a85.appspot.com",
+		    messagingSenderId: "618274718089",
+		    appId: "1:618274718089:web:efcdb4fc1012a84d966158",
+		    measurementId: "G-9CS9GJGH47"
+		  };
+		  // Initialize Firebase
+		  firebase.initializeApp(firebaseConfig);
+		</script>
+
+    	<script src="app.js"></script>
+	</body>
 </html>
