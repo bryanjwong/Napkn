@@ -28,7 +28,7 @@ firebase.database().ref('Napkn').once("value", function(snapshot) {
 
             // Display minutes remaining
             let timeLeft = document.createElement('h2');
-            timeLeft.innerHTML = childSnapshot.child("TimeRemaining").val();
+            timeLeft.innerHTML = childSnapshot.child("TimeRemaining").val() + " mins";
             listItem.appendChild(timeLeft);
         }
         else
