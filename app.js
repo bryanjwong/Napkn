@@ -1,71 +1,45 @@
-var database = firebase.database();
-var table = database.ref('Napkn');
+let i = 0;
+let numOpenTables = 0;
 
-var ref = firebase.database().ref('Napkn');
-var tableList = document.getElementById("TableList");
-var openTables = document.getElementById("TablesOpen");
+firebase.database().ref('Napkn').once("value", function(snapshot) {
+    snapshot.forEach(function(childSnapshot) {
+        
+        let listItem = document.createElement('li');
 
-var i = 1;
-var numOpenTables = 0;
+        // show table number
+        let tableNum = document.createElement('h2');
+        tableNum.innerHTML = "table " + (i+1);
+        listItem.appendChild(tableNum);
+        
+        // show device status (open or occupied)
+        let deviceStatus = document.createElement('h3');
+        let status = childSnapshot.child("DeviceStatus").val();
+        deviceStatus.innerHTML = status.toLowerCase();
+        listItem.appendChild(deviceStatus);
 
-ref.once("value", function(snapshot) {
-  snapshot.forEach(function(childSnapshot) {
-    console.log(childSnapshot.child("DeviceStatus").val());
-    let item = document.createElement('li');
-    item.classList.add("napkn-num");
+        
+        if(status == "Occupied"){
+            listItem.classList.add('occupied');
+            listItem.appendChild(document.createElement('br'));
+            
+            let remaining = document.createElement('h3');
+            remaining.innerHTML = "remaining:";
+            listItem.appendChild(remaining);
 
-    let tableNum = document.createElement('li');
-    tableNum.classList.add("napkn-num");
+            // Display minutes remaining
+            let timeLeft = document.createElement('h2');
+            timeLeft.innerHTML = childSnapshot.child("TimeRemaining").val();
+            listItem.appendChild(timeLeft);
+        }
+        else
+            numOpenTables++;
 
-    // napkin title
-    let div1 = document.createElement('div')
-    div1.classList.add("col-lg-4");
-    div1.innerText = "Napkn #" + i + " ";
-    div1.classList.add("napkn-title");
-    tableList.appendChild(div1);
+        let tableList = document.getElementById("TableList");
+        tableList.appendChild(listItem);
+        i++;
+      });
 
-    let div2 = document.createElement('div')
-    div2.classList.add("col-lg-4");
-    div2.innerText = "Status: " + childSnapshot.child("DeviceStatus").val() + " ";
-    div2.classList.add("napkn-status");
-    tableList.appendChild(div2);
-
-    let div3 = document.createElement('div')
-    div3.classList.add("col-lg-4");
-    div3.classList.add("napkn-timeLeft");
-    tableList.appendChild(div3);
-
-
-    let status = document.createElement('li');
-    status.classList.add("napkn-status");
-    let timeLeft = document.createElement('li');
-    timeLeft.classList.add("napkn-timeLeft");
-
-    let space = document.createElement('div');
-
-    // Print out table number
-    // tableNum.innerHTML = "Napkn #" + i + " ";
-    // item.appendChild(tableNum);
-    // tableList.appendChild(item);
-    i++;
-
-    // Display device status (open or occupied)
-    // status.innerHTML = "Status: " + childSnapshot.child("DeviceStatus").val() + " ";
-    // tableList.appendChild(status);
-
-
-
-    // Display minutes remaining
-    var statusStr = childSnapshot.child("DeviceStatus").val().toString();
-    if (statusStr == "Open"){
-      div3.innerText = "Time remaining: N/A ";
-      numOpenTables++;
-    }else{ // otherwise, occupied
-      div3.innerText = "Time remaining: " + childSnapshot.child("TimeRemaining").val();
-    }
-    tableList.appendChild(timeLeft);
-    tableList.appendChild(space);
-  });
-
-  openTables.innerHTML = "Tables Open: " + numOpenTables; // Display num open tables
+    // Display number of open tables
+    let openTables = document.getElementById("TablesOpen");
+    openTables.innerHTML = "tables open: " + numOpenTables + "/" + i; // Display num open tables
 });
