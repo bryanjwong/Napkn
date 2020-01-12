@@ -5,13 +5,13 @@
 #include <IOXhop_FirebaseESP32.h>                                   // firebase library
 #define FIREBASE_HOST "napkn-test-d7a85.firebaseio.com"             // the project name address from firebase id
 #define FIREBASE_AUTH "o1DICNIM0C1pJboj0sFu0VH5mMZ4U9zQZwq8M0jq"    // the secret key generated from firebase
-//#define WIFI_SSID "AndroidAP"                                       // input your home or public wifi name
-//#define WIFI_PASSWORD "wxai8878"                                    // password of wifi ssid
-#define WIFI_SSID "UCLA_WEB"                                        // input your home or public wifi name
-#define WIFI_PASSWORD ""
+#define WIFI_SSID "AndroidAP"                                       // input your home or public wifi name
+#define WIFI_PASSWORD "wxai8878"                                    // password of wifi ssid
+//#define WIFI_SSID "UCLA_WEB"                                        // input your home or public wifi name
+//#define WIFI_PASSWORD ""
 
 // Unique Device ID
-const String DEVICE_ID = "Napkn1";                                  // Format: Napkn[X]
+const String DEVICE_ID = "Napkn2";                                  // Format: Napkn[X]
 
 // Database Paths
 const String deviceStatus_path = "Napkn/" + DEVICE_ID + "/DeviceStatus";
