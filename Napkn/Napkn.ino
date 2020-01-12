@@ -5,13 +5,13 @@
 #include <IOXhop_FirebaseESP32.h>                                   // firebase library
 #define FIREBASE_HOST "napkn-test-d7a85.firebaseio.com"             // the project name address from firebase id
 #define FIREBASE_AUTH "o1DICNIM0C1pJboj0sFu0VH5mMZ4U9zQZwq8M0jq"    // the secret key generated from firebase
-#define WIFI_SSID "AndroidAP"                                       // input your home or public wifi name
-#define WIFI_PASSWORD "wxai8878"                                    // password of wifi ssid
-//#define WIFI_SSID "UCLA_WEB"                                       // input your home or public wifi name
-//#define WIFI_PASSWORD ""
+//#define WIFI_SSID "AndroidAP"                                       // input your home or public wifi name
+//#define WIFI_PASSWORD "wxai8878"                                    // password of wifi ssid
+#define WIFI_SSID "UCLA_WEB"                                        // input your home or public wifi name
+#define WIFI_PASSWORD ""
 
 // Unique Device ID
-const String DEVICE_ID = "Napkn1";
+const String DEVICE_ID = "Napkn1";                                  // Format: Napkn[X]
 
 // Database Paths
 const String deviceStatus_path = "Napkn/" + DEVICE_ID + "/DeviceStatus";
@@ -26,6 +26,8 @@ const String tablesOpen_path = "Napkn/Values/TablesOpen";
 #include <MFRC522.h>
 
 #define IS_BRUINCARD(uid_size) (uid_size == 7)
+#define IS_GUESTCARD(rfid) (rfid == "09 5D 5E 63") 
+#define IS_EASTEREGG(rfid) (rfid == "04 8F 42 0A EB 62 80")
 
 #define SS_PIN 25
 #define RST_PIN 32
@@ -50,17 +52,12 @@ byte mins, secs;
 /*------------------*/
 
 /*---Speaker---*/
-#define SPEAKER 34 
-
-#define NOTE_E5  659
-#define NOTE_G5  784
-#define NOTE_C6  1047
-#define NOTE_F5  698
-#define NOTE_B4  494
+#include <pitches.h>
+#define SPEAKER 26 
 
 const int CHANNEL = 0;
 const int RESOLUTION = 8;
-int NOTE_DUR = 137;
+int NOTE_DUR = 78;
 
 // Play a Note
 void play(int note, int dur) {
@@ -70,12 +67,20 @@ void play(int note, int dur) {
     delay(dur * NOTE_DUR / 3);
 }
 
-void goodJingle() {
+void checkinJingle() {
   play(NOTE_G5, 1);
   play(NOTE_E5, 1);
   play(NOTE_G5, 1);
   play(NOTE_C6, 1);
 }
+
+void checkoutJingle() {
+  play(NOTE_G5, 1);
+  play(NOTE_E5, 1);
+  play(NOTE_G5, 1);
+  play(NOTE_C5, 1);
+}
+
 void badJingle() {
   play(NOTE_F5, 2);
   play(NOTE_B4, 4);
@@ -145,17 +150,12 @@ void displayTimeRemaining() {
 /*----------------------*/
 
 void setup() {
-  Serial.begin(115200);
-  // Initialize Speaker
-  ledcSetup(CHANNEL, 2000, RESOLUTION);
-  ledcAttachPin(SPEAKER, CHANNEL);
-  ledcWrite(CHANNEL, 255);
-  Serial.println("PLAYING THE MUSIC OF MY PEOPLE");
-  ledcWriteTone(CHANNEL, 2000);
-  goodJingle();
-  
+  Serial.begin(115200);  
   delay(1000);
 
+  Serial.print("Initialized ");
+  Serial.println(DEVICE_ID);
+  Serial.println("------------------");
   // Initialize WiFi
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);                                      //try to connect with wifi
   Serial.print("Connecting to ");
@@ -195,9 +195,8 @@ void setup() {
   ledcSetup(CHANNEL, 2000, RESOLUTION);
   ledcAttachPin(SPEAKER, CHANNEL);
   ledcWrite(CHANNEL, 255);
-  Serial.println("PLAYING THE MUSIC OF MY PEOPLE");
   ledcWriteTone(CHANNEL, 2000);
-  goodJingle();
+  checkinJingle();
   
   // Initialize OLED Display
   display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR);
@@ -234,9 +233,7 @@ void loop() {
       deviceStatus = "Open";
       digitalWrite(RED_LED, LOW);       // Turn GREEN LED on
       digitalWrite(GREEN_LED, HIGH);
-      Firebase.setString(deviceStatus_path, "Open");
-      String recentUserRFID_tables_path = "Users/" + recentUserRFID + "/Tables";
-      Firebase.setInt(recentUserRFID_tables_path, Firebase.getInt(recentUserRFID_tables_path) - 1);
+      
       Serial.print(recentUserName);
       Serial.println(" has been checked out of this table");
       
@@ -247,9 +244,11 @@ void loop() {
       display.println("timed out!");
       display.display();
       // Play checkout music
-      Serial.println("Delaying 1.5s...");
-      delay(1500);
-      Serial.println("Delay complete.");
+      checkoutJingle();
+
+      Firebase.setString(deviceStatus_path, "Open");
+      String recentUserRFID_tables_path = "Users/" + recentUserRFID + "/Tables";
+      Firebase.setInt(recentUserRFID_tables_path, Firebase.getInt(recentUserRFID_tables_path) - 1);
 
       display.clearDisplay();
       display.setCursor(3, 10);
@@ -268,10 +267,17 @@ void loop() {
       }
     }
   }
-
+  
   if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial())
   {
-    if (!IS_BRUINCARD(mfrc522.uid.size)) {      // Check for invalid cards
+    String scannedID = processRFID();
+    Serial.print("Read RFID: ");
+    Serial.println(scannedID);
+    if(IS_EASTEREGG(scannedID)) {
+       easterEgg();
+       return;
+    }
+    if (!IS_GUESTCARD(scannedID) && !IS_BRUINCARD(mfrc522.uid.size)) {      // Check for invalid cards
       Serial.println("Please enter a valid BruinCard.");
       
       display.clearDisplay();
@@ -283,11 +289,8 @@ void loop() {
       
       digitalWrite(RED_LED, HIGH);
       digitalWrite(GREEN_LED, LOW);
-
-      // Play card deny music
-      Serial.println("Delaying 1.5s...");
-      delay(1500);
-      Serial.println("Delay complete.");
+      badJingle();
+      
       if (deviceStatus == "Open") {
         digitalWrite(RED_LED, LOW);
         digitalWrite(GREEN_LED, HIGH);
@@ -299,10 +302,7 @@ void loop() {
       }
       return;
     }
-
-    String scannedID = processRFID();
-    Serial.print("Read RFID: ");
-    Serial.println(scannedID);
+    play(NOTE_C6, 1);
 
     // Generate user information database paths using Scanned ID
     String scannedID_name_path = "Users/" + scannedID + "/Name";
@@ -313,10 +313,6 @@ void loop() {
       if (scannedID == recentUserRFID) {      // User is checking out
         digitalWrite(RED_LED, LOW);         // Turn GREEN LED on
         digitalWrite(GREEN_LED, HIGH);
-        // Play checkout music
-        Serial.println("Delaying 1.5s...");
-        delay(1500);
-        Serial.println("Delay complete.");
 
         Serial.print(recentUserName);
         Serial.println(" has been checked out of this table");
@@ -326,6 +322,7 @@ void loop() {
         display.println("  using   ");
         display.println("  Napkn!  ");
         display.display();
+        checkoutJingle();
         delay(2500);
         
         deviceStatus = "Open";
@@ -348,17 +345,7 @@ void loop() {
         display.println("    is    ");
         display.println(" reserved.");
         display.display();
-        
-        // Play angry music
-        Serial.println("Delaying 1.5s...");
-        delay(1500);
-        Serial.println("Delay complete.");
-
-        display.clearDisplay();
-        display.setCursor(3, 10);
-        display.println("This Napkn");
-        display.println(" is open! ");
-        display.display();
+        badJingle();
       }
     } else if (deviceStatus == "Open") {
       int maxTables;
@@ -379,10 +366,7 @@ void loop() {
         
         digitalWrite(RED_LED, HIGH);        // Turn RED LED on
         digitalWrite(GREEN_LED, LOW);
-        // Play angry music
-        Serial.println("Delaying 1.5s...");
-        delay(1500);
-        Serial.println("Delay complete.");
+        badJingle();
 
         display.clearDisplay();
         display.setCursor(3, 10);
@@ -408,10 +392,7 @@ void loop() {
         
         digitalWrite(RED_LED, HIGH);          // Turn RED LED On
         digitalWrite(GREEN_LED, LOW);
-        // Play angry music
-        Serial.println("Delaying 1.5s...");
-        delay(1500);
-        Serial.println("Delay complete.");
+        badJingle();
 
         display.clearDisplay();
         display.setCursor(3, 10);
@@ -424,11 +405,8 @@ void loop() {
       } else {
         digitalWrite(RED_LED, HIGH);      // Turn RED On
         digitalWrite(GREEN_LED, LOW);
-        // Play happy music
-        Serial.println("Delaying 1.5s...");
-        delay(1500);
-        Serial.println("Delay complete.");
-
+        checkinJingle();
+        
         if (scannedID == recentUserRFID)
           consecutiveCheckIns++;
         else {
@@ -460,5 +438,78 @@ void loop() {
       }
     }
   }
-
 }
+
+/*---Easter Egg---*/
+void easterEgg() {
+    NOTE_DUR = 58;  // Set tempo to be faster
+    play(NOTE_D4, 1);
+    play(NOTE_FS4, 1);
+    play(NOTE_B4, 1);
+    play(NOTE_D5, 1);
+    play(NOTE_CS5, 1);
+    play(NOTE_B4, 1);
+    play(NOTE_AS4, 1);
+    play(NOTE_B4, 16); //m2
+    delay(NOTE_DUR*6);
+    play(NOTE_B4, 6);
+    play(NOTE_CS5, 6);
+    play(NOTE_D5, 6);
+    play(NOTE_E5, 6); //m3
+    play(NOTE_FS5, 7);
+    play(NOTE_D5, 7);
+    play(NOTE_FS5, 8);
+    play(NOTE_D5, 8);
+    play(NOTE_FS5, 22);
+    delay(NOTE_DUR*4);
+    play(NOTE_FS4, 2); //m4
+    play(NOTE_D5, 6);
+    play(NOTE_E4, 2);
+    play(NOTE_CS5, 6);
+    play(NOTE_D4, 2);
+    play(NOTE_B4, 4); //m5
+    play(NOTE_D4, 2);
+    play(NOTE_FS4, 4);
+    play(NOTE_B4, 2);
+    play(NOTE_D4, 4);
+    play(NOTE_B4, 4);
+    play(NOTE_D4, 2);
+    play(NOTE_FS4, 2);
+    play(NOTE_D5, 2);
+    play(NOTE_CS5, 2);
+    play(NOTE_B4, 2);
+    play(NOTE_A4, 2);
+    play(NOTE_B4, 4); //m6
+    play(NOTE_D4, 2);
+    play(NOTE_G4, 4);
+    play(NOTE_B4, 2);
+    play(NOTE_D4, 4);
+    play(NOTE_B4, 4);
+    play(NOTE_D4, 2);
+    play(NOTE_G4, 2);
+    play(NOTE_D5, 2);
+    play(NOTE_CS5, 2);
+    play(NOTE_B4, 2);
+    play(NOTE_A4, 2);
+    play(NOTE_D5, 4); //m7
+    play(NOTE_FS4, 2);
+    play(NOTE_A4, 4);
+    play(NOTE_D5, 2);
+    play(NOTE_FS4, 4);
+    play(NOTE_D5, 4);
+    play(NOTE_FS4, 2);
+    play(NOTE_A4, 2);
+    play(NOTE_D5, 2);
+    play(NOTE_CS5, 2);
+    play(NOTE_B4, 2);
+    play(NOTE_A4, 2);
+    play(NOTE_E5, 12); //m8
+    delay(NOTE_DUR*2);
+    play(NOTE_FS4, 2);
+    play(NOTE_D5, 6);
+    play(NOTE_E4, 2);
+    play(NOTE_CS5, 6);
+    play(NOTE_D4, 2);
+    play(NOTE_B4, 10); //m9
+}
+/*----------------*/
