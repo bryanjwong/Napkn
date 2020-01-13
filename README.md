@@ -57,7 +57,7 @@ Here is a list of the libraries we used:
 
 ![](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/910/346/datas/gallery.jpg)
 
-We also created a [simple website](https://bryanjwong.github.io/Napkn/) using HTML, CSS, and Javascript to display table occupancy to users. `app.js` pulls information from Firebase and `index.html` uses HTML and CSS to display it. The website pulls information from Firebase and displays it in an easy-to-understand format. In the future, we would like to add user-end functionality, such as reserving tables.
+We also created a [simple website](https://bryanjwong.github.io/Napkn/) using HTML, CSS, and Javascript to display table occupancy to users. `app.js` pulls information from Firebase and `index.html` uses HTML and CSS to display it in an easy-to-understand format. In the future, we would like to add user-end functionality, such as reserving tables.
 
 ## Improvements 
 In order to improve the Napkn experience, there are several designs and optimizations we could explore. From a hardware perspective, designing a PCB would allow for a much better form factor. We could also improve the durability and materials used for the exterior. On the software side, implementing a table map on the website could allow users to know exactly which tables are open. Given more Napkn modules, we would like to implement a server-side algorithm that automatically senses dining/study hall traffic and updates our database's dynamic values for checkin duration and number of tables allowed.
