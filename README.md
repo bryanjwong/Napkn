@@ -22,6 +22,7 @@ Each Napkn is built with WiFi functionality, allowing it to communicate with our
 <img src="https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/908/862/datas/gallery.jpg" style="max-width:75%;max-height:75%"/>
 Each Napkn consists of a variety of input and output components built around a WiFi-enabled ESP32 microcontroller. With 2 different communication protocols and a NMOS transistor amplifier circuit, building the circuit proved quite the challenge!
 
+
 Here are the parts we used for each Napkn:
 * [DOIT Esp32 DevKit v1](https://docs.zerynth.com/latest/official/board.zerynth.doit_esp32/docs/index.html)
 * [Sunfounder MFRC522 RFID Module](http://wiki.sunfounder.cc/images/c/c6/MFRC522_datasheet.pdf)
@@ -42,7 +43,7 @@ The RFID module is controlled with SPI and the OLED display is controlled with I
 
 The code that runs on each Napkn is `Napkn.ino`, located in the `Napkn` folder. By using a Firebase library we found online, we were able to connect to our database. Upon scanning an RFID card, the Napkn will communicate with Firebase to determine the correct action to take. For example, if the user has checked out too many tables, the database will notify the Napkn to reject the checkin. These cases that could reject users are dynamically set, so that they can be modified from the database or from an external script based on dining/study hall traffic. If a user is successfully checked in, the Napkn will update the database with its status, the user's RFID number, and the number of tables the user has checked in. Since reading and writing from Firebase can have high latency, we minimized the number of reads and writes by using several local variables stored on the Napkn that are synced with the database upon startup. This way, if our Napkn crashes, it is able to recover its state from the database.
 
-In order for the Napkn properties, we used several libraries, many of which were modified due to compatibility issues. **In order for Napkn to work properly, you must add the libraries inside the `libraries` folder into your `Arduino/libraries` folder!**
+In order to program Napkn, we used several libraries, many of which were modified due to compatibility issues. **In order for Napkn to work properly, you must add the libraries inside the `libraries` folder into your `Arduino/libraries` folder!**
 
 Here is a list of the libraries we used:
 * [IOXhop_FirebaseESP32](https://github.com/ioxhop/IOXhop_FirebaseESP32)
