@@ -1,5 +1,6 @@
 # Napkn #
-<img src="https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/908/858/datas/gallery.jpg" style="width:50px"/>
+![](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/908/858/datas/gallery.jpg =250x)
+
 # IDEA Hacks 2020 - 1st Place Winner! 
 
 ### Bryan Wong, Caleb Terrill, Fred Chu, Lucas Wolter, Caitlyn Chau 
