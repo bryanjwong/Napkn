@@ -1,5 +1,5 @@
 # Napkn #
-![](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/908/858/datas/gallery.jpg =250x)
+![](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/908/858/datas/gallery.jpg)
 
 # IDEA Hacks 2020 - 1st Place Winner! 
 
