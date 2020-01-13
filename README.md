@@ -1,7 +1,5 @@
-# Napkn #
-![](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/908/858/datas/gallery.jpg)
-
-# IDEA Hacks 2020 - 1st Place Winner! 
+# Napkn - the IDEA Hacks 2020 1st Place Winner! 
+![](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/908/858/datas/gallery.jpg =100x20)
 
 ### Bryan Wong, Caleb Terrill, Fred Chu, Lucas Wolter, Caitlyn Chau 
 ## [Slide Deck](https://docs.google.com/presentation/d/1dGl8s7gmYrvF6xw_J4Y-Q9_lGWD_yz9ZMoIB_ys8bzU/edit?usp=sharing) | [Videos](https://drive.google.com/drive/folders/11-iaHL7j0u7RTrozLryqRc23VB2-lLvD?usp=sharing) | [Website](https://bryanjwong.github.io/Napkn/) | [DevPost](https://devpost.com/software/napkn-kavgmw)
