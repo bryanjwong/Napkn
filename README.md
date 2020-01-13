@@ -55,6 +55,7 @@ Here is a list of the libraries we used:
 
 **In order for Napkn to work properly, you must add the libraries inside the `libraries` folder into your `Arduino/libraries` folder!**
 
+## Website
 ![](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/910/346/datas/gallery.jpg)
 
 We also created a [simple website](https://bryanjwong.github.io/Napkn/) using HTML, CSS, and Javascript to display table occupancy to users. `app.js` pulls information from Firebase and `index.html` uses HTML and CSS to display it in an easy-to-understand format. In the future, we would like to add user-end functionality, such as reserving tables.
