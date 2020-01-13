@@ -1,5 +1,6 @@
 # Napkn #
 <img src="https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/908/858/datas/gallery.jpg" style="max-width:25%;max-height:25%"/>
+
 #### Bryan Wong, Caleb Terrill, Fred Chu, Lucas Wolter, Caitlyn Chau 
 ## [Slide Deck](https://docs.google.com/presentation/d/1dGl8s7gmYrvF6xw_J4Y-Q9_lGWD_yz9ZMoIB_ys8bzU/edit?usp=sharing) | [Videos](https://drive.google.com/drive/folders/11-iaHL7j0u7RTrozLryqRc23VB2-lLvD?usp=sharing) | [Website](https://bryanjwong.github.io/Napkn/) 
 
@@ -50,7 +51,7 @@ Here is a list of the libraries we used:
 * pitches (labelled notes for ease of use with speaker)
 
 <img src="https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/910/346/datas/gallery.jpg" style="max-width:25%;max-height:25%"/>
-We also created a **[simple website](https://bryanjwong.github.io/Napkn/)** using HTML, CSS, and Javascript to display table occupancy to users. `app.js` pulls information from Firebase and `index.html` uses HTML and CSS to display it. The website pulls information from Firebase and displays it in an easy-to-understand format. In the future, we would like to add user-end functionality, such as reserving tables.
+We also created a [**simple website**](https://bryanjwong.github.io/Napkn/) using HTML, CSS, and Javascript to display table occupancy to users. `app.js` pulls information from Firebase and `index.html` uses HTML and CSS to display it. The website pulls information from Firebase and displays it in an easy-to-understand format. In the future, we would like to add user-end functionality, such as reserving tables.
 
 ## Improvements 
 In order to improve the Napkn experience, there are several designs and optimizations we could explore. From a hardware perspective, designing a PCB would allow for a much better form factor. We could also improve the durability and materials used for the exterior. On the software side, implementing a table map on the website could allow users to know exactly which tables are open. Given more Napkn modules, we would like to implement a server-side algorithm that automatically senses dining/study hall traffic and updates our database's dynamic values for checkin duration and number of tables allowed.
