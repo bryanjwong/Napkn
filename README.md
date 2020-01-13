@@ -18,7 +18,7 @@ Napkn is a convenient and intuitive tabletop IoT table reservation device. With 
 
 Each Napkn is built with WiFi functionality, allowing it to communicate with our real-time Google Firebase Database and update information about device usage and user reservations. This information is made public through the [Napkn website](https://bryanjwong.github.io/Napkn), allowing users to get extremely accurate metrics on dining/study hall traffic. Additionally, during periods of high traffic, parameters such as the checkin time limit and maximum number of consecutive checkins are modified to help alleviate overcrowding and help ensure everybody can get a table.
 
-# Hardware 
+## Hardware 
 ![](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/000/908/862/datas/gallery.jpg)
 
 Each Napkn consists of a variety of input and output components built around a WiFi-enabled ESP32 microcontroller. With 2 different communication protocols and a NMOS transistor amplifier circuit, building the circuit proved quite the challenge!
